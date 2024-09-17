@@ -1,25 +1,38 @@
 package com.nikolic.catalog.service;
 
 import com.nikolic.catalog.dto.BookDto;
+import com.nikolic.catalog.event.model.NewBookAddedEvent;
+import com.nikolic.catalog.event.producer.BookEventProducer;
 import com.nikolic.catalog.exception.BookNotFoundException;
 import com.nikolic.catalog.mapper.BookMapper;
-import com.nikolic.catalog.model.Book;
 import com.nikolic.catalog.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CatalogService {
+
     private final BookRepository bookRepository;
+    private final BookEventProducer bookEventProducer;
 
     public void addBook(BookDto bookDto) {
-        Book book = BookMapper.INSTANCE.bookDtoToBook(bookDto);
-        bookRepository.save(book);
+        var book = BookMapper.INSTANCE.bookDtoToBook(bookDto);
+        var newBook = bookRepository.saveAndFlush(book);
+
+        NewBookAddedEvent event = new NewBookAddedEvent(
+                newBook.getId(),
+                newBook.getTitle(),
+                newBook.getAuthor(),
+                newBook.getGenre(),
+                newBook.getPrice()
+        );
+        bookEventProducer.sendNewBookEvent(event);
     }
 
     public List<BookDto> getAllBooks () {
