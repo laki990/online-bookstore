@@ -1,8 +1,6 @@
 package com.nikolic.catalog.controller;
 
 import com.nikolic.catalog.dto.BookDto;
-import com.nikolic.catalog.event.model.NewBookAddedEvent;
-import com.nikolic.catalog.event.producer.BookEventProducer;
 import com.nikolic.catalog.service.CatalogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

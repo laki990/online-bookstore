@@ -1,11 +1,12 @@
 package com.nikolic.inventory_service.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "book_inventory")
-@Data
+@Getter
+@Setter
 public class BookInventory {
 
     @Id

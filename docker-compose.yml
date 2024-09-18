@@ -42,6 +42,21 @@ services:
     networks:
       - app-network
 
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    depends_on:
+      - catalog-service
+    networks:
+      - app-network
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - CATALOG_SERVICE_URI=http://catalog-service:8081
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     depends_on:
@@ -55,7 +70,7 @@ services:
     networks:
       - app-network
 
-  catalog_service:
+  catalog-service:
     build:
       context: ./catalog-service
       dockerfile: Dockerfile
@@ -69,11 +84,11 @@ services:
       - postgres
       - broker
     ports:
-      - "8080:8080"
+      - "8081:8081"
     networks:
       - app-network
 
-  inventory_service:
+  inventory-service:
     build:
       context: ./inventory-service
       dockerfile: Dockerfile
@@ -87,7 +102,7 @@ services:
       - postgres
       - broker
     ports:
-      - "8081:8080"
+      - "8082:8082"
     networks:
       - app-network
 
