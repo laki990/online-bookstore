@@ -106,6 +106,41 @@ services:
     networks:
       - app-network
 
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=user_service
+      - DATABASE_USER=laki
+      - DATABASE_PASSWORD=pass
+    depends_on:
+      - postgres
+      - broker
+    ports:
+      - "8083:8083"
+    networks:
+      - app-network
+
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=order_service
+      - DATABASE_USER=order_user
+      - DATABASE_PASSWORD=pass
+    depends_on:
+      - postgres
+      - broker
+    ports:
+      - "8084:8084"
+    networks:
+      - app-network
 networks:
   app-network:
     driver: bridge
