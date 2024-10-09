@@ -15,4 +15,6 @@ public class Book {
     String author;
     String genre;
     Double price;
+    @Enumerated(EnumType.STRING)
+    Availability availability;
 }

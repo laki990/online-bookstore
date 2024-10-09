@@ -16,6 +16,7 @@ public interface BookMapper {
 
     BookDto bookToBookDto (Book book);
 
+    @Mapping(target = "availability", ignore = true)
     Book bookDtoToBook(BookDto bookDto);
 
     List<BookDto> bookListToBookDtoList(List<Book> bookList);

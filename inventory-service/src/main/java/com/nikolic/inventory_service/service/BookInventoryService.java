@@ -13,7 +13,7 @@ public class BookInventoryService {
 
     private BookInventoryRepository bookInventoryRepository;
 
-    public BookInventoryDto getAvaliableCopies(String bookId) {
+    public BookInventoryDto getAvaliableCopies(Long bookId) {
         BookInventory bookInventory = bookInventoryRepository.findByBookId(bookId);
         return BookInventoryMapper.INSTANCE.inventoryBookToInventoryBookDto(bookInventory);
     }

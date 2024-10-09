@@ -6,6 +6,6 @@ import lombok.Data;
 public class BookInventoryDto {
 
     Long id;
-    String bookId;
+    Long bookId;
     Integer availableCopies;
 }

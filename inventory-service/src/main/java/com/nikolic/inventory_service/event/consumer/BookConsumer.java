@@ -23,7 +23,7 @@ public class BookConsumer {
 
         try {
             NewBookAddedEvent newBookAddedEvent = objectMapper.readValue(message, NewBookAddedEvent.class);
-            String bookId = newBookAddedEvent.getBookId();
+            Long bookId = Long.valueOf(newBookAddedEvent.getBookId());
             BookInventory bookInventory = new BookInventory();
             bookInventory.setBookId(bookId);
             bookInventory.setAvailableCopies(0);

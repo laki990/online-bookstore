@@ -5,6 +5,7 @@ import com.nikolic.catalog.event.model.NewBookAddedEvent;
 import com.nikolic.catalog.event.producer.BookEventProducer;
 import com.nikolic.catalog.exception.BookNotFoundException;
 import com.nikolic.catalog.mapper.BookMapper;
+import com.nikolic.catalog.model.Availability;
 import com.nikolic.catalog.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class CatalogService {
 
     public void addBook(BookDto bookDto) {
         var book = BookMapper.INSTANCE.bookDtoToBook(bookDto);
+        book.setAvailability(Availability.IN_STOCK);
         var newBook = bookRepository.saveAndFlush(book);
 
         NewBookAddedEvent event = new NewBookAddedEvent(

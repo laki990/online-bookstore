@@ -45,7 +45,7 @@ public class OrderService {
         );
 
         producer.sendNewOrderEvent(orderCreatedEvent);
-        
+
         return orderMapper.toOrderDTO(savedOrder);
     }
 
