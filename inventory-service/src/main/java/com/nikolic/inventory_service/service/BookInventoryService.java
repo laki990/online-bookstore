@@ -2,6 +2,8 @@ package com.nikolic.inventory_service.service;
 
 import com.nikolic.inventory_service.dto.BookQuantityDTO;
 import com.nikolic.inventory_service.dto.BookInventoryDto;
+import com.nikolic.inventory_service.event.producer.BookQuantityChangedProducer;
+import com.nikolic.inventory_service.event.producer.model.BookQuantityChangedEvent;
 import com.nikolic.inventory_service.mapper.BookInventoryMapper;
 import com.nikolic.inventory_service.model.BookInventory;
 import com.nikolic.inventory_service.repository.BookInventoryRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class BookInventoryService {
 
     private final BookInventoryRepository bookInventoryRepository;
+    private final BookQuantityChangedProducer bookQuantityChangedProducer;
 
     public BookInventoryDto getAvaliableCopies(Long bookId) {
         return bookInventoryRepository.findByBookId(bookId)
@@ -26,6 +29,10 @@ public class BookInventoryService {
                 .orElseGet(() -> createNewBookInventory(bookId, bookQuantityDTO.getQuantity()));
 
         BookInventory savedBookInventory = bookInventoryRepository.save(bookInventory);
+
+        var bookQuantityChangedEvent = new BookQuantityChangedEvent(bookId, savedBookInventory.getAvailableCopies());
+        bookQuantityChangedProducer.send(bookQuantityChangedEvent);
+
         return BookInventoryMapper.INSTANCE.inventoryBookToInventoryBookDto(savedBookInventory);
     }
 
@@ -39,6 +46,9 @@ public class BookInventoryService {
 
         bookInventory.setAvailableCopies(bookInventory.getAvailableCopies() - bookQuantityDTO.getQuantity());
         BookInventory updatedBookInventory = bookInventoryRepository.save(bookInventory);
+
+        var bookQuantityChangedEvent = new BookQuantityChangedEvent(bookId, updatedBookInventory.getAvailableCopies());
+        bookQuantityChangedProducer.send(bookQuantityChangedEvent);
 
         return BookInventoryMapper.INSTANCE.inventoryBookToInventoryBookDto(updatedBookInventory);
     }

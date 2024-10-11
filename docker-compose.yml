@@ -42,6 +42,16 @@ services:
     networks:
       - app-network
 
+  service-registry:
+    build:
+      context: ./service-registry
+      dockerfile: Dockerfile
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+    networks:
+      - app-network
+
   api-gateway:
     build:
       context: ./api-gateway
@@ -83,6 +93,7 @@ services:
     depends_on:
       - postgres
       - broker
+      - service-registry
     ports:
       - "8081:8081"
     networks:

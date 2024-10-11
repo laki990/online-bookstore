@@ -34,7 +34,7 @@ public class CatalogService {
                 newBook.getGenre(),
                 newBook.getPrice()
         );
-        bookEventProducer.sendNewBookEvent(event);
+        bookEventProducer.send(event);
     }
 
     public List<BookDto> getAllBooks () {
