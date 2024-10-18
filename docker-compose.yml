@@ -52,6 +52,16 @@ services:
     networks:
       - app-network
 
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - app-network
+
   api-gateway:
     build:
       context: ./api-gateway
