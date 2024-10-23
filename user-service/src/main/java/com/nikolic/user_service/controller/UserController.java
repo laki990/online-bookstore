@@ -31,14 +31,12 @@ public class UserController {
 
         @GetMapping("/{id}")
         public ResponseEntity<UserProfileDTO> getUser(@PathVariable Long id) {
-            // Implement logic to retrieve user by ID
-            return null;  // Placeholder for actual implementation
+            return null;
         }
 
         @PutMapping("/{id}")
         public ResponseEntity<UserProfileDTO> updateUser(@PathVariable Long id, @RequestBody UserRegistrationDTO updateDTO) {
-            // Implement logic to update user by ID
-            return null;  // Placeholder for actual implementation
+            return null;
         }
     }
 

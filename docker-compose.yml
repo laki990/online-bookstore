@@ -95,11 +95,9 @@ services:
       context: ./catalog-service
       dockerfile: Dockerfile
     environment:
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=catalog_service
-      - DATABASE_USER=catalog_user
-      - DATABASE_PASSWORD=pass
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+
     depends_on:
       - postgres
       - broker
