@@ -21,7 +21,7 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            return jwtUtil.generateToken(user.getUsername());
+            return jwtUtil.generateToken(user.getUsername(), user.getRole().name());
         } else {
             throw new RuntimeException("Invalid credentials");
         }

@@ -96,8 +96,6 @@ services:
       dockerfile: Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-
     depends_on:
       - postgres
       - broker

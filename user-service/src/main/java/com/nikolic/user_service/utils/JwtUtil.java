@@ -1,5 +1,6 @@
 package com.nikolic.user_service.utils;
 
+import com.nikolic.user_service.model.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,9 +24,9 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private Long expirationTime;
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(username).claim("role", role)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date (System.currentTimeMillis() + expirationTime))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -35,10 +36,12 @@ public class JwtUtil {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);    }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, UserDetails userDetails, Role requiredRole) {
         String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-
+        Role tokenRole = extractRole(token);
+        return (username.equals(userDetails.getUsername()) &&
+                !isTokenExpired(token) &&
+                tokenRole == requiredRole);  // Checks if the role matches
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -57,6 +60,11 @@ public class JwtUtil {
 
     private boolean isTokenExpired(String token){
         return extractClaim(token, Claims::getExpiration).before(new Date(System.currentTimeMillis()));
+    }
+
+    public Role extractRole(String token) {
+        String roleName = extractClaim(token, claims -> claims.get("role", String.class));
+        return Role.valueOf(roleName);
     }
 
     private Key getSignInKey() {
